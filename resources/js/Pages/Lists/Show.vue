@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import {useForm} from "@inertiajs/vue3";
+import {router, useForm} from "@inertiajs/vue3";
 import AppKanban from "@/Components/AppKanban.vue";
 import AppModal from "@/Components/AppModal.vue";
 import {ref} from "vue";

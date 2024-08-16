@@ -2,13 +2,15 @@
 import AppKanbanTask from "@/Components/AppKanbanTask.vue";
 import AppModal from "@/Components/AppModal.vue";
 import {ref} from "vue";
-import {useForm} from "@inertiajs/vue3";
+import {router, useForm} from "@inertiajs/vue3";
+import {TrashIcon} from "@heroicons/vue/24/outline/index.js";
 
 const props = defineProps({
   item: Object
 })
 
 const {isNewTaskModalOpen, priorities, form, submit} = useNewTask()
+const { deleteSection } = useDelete()
 
 function useNewTask() {
   const isNewTaskModalOpen = ref(false)
@@ -42,6 +44,16 @@ function useNewTask() {
     submit
   }
 }
+
+function useDelete() {
+  const deleteSection = () => {
+    router.delete(route('sections.destroy', props.item.id), {preserveScroll: true})
+  }
+
+  return {
+    deleteSection
+  }
+}
 </script>
 
 <template>
@@ -51,6 +63,7 @@ function useNewTask() {
       <div class="flex items-center justify-between">
         <h2 class="bg-indigo-300 text-sm w-max px-1 rounded mr-2 text-black">{{ item.name }}</h2>
         <p class="text-gray-400 dark:text-gray-500 text-sm">({{ item.uncompletedTasksCount }})</p>
+        <TrashIcon class="ml-1 size-4 text-red-500 hover:bg-red-500/50 rounded cursor-pointer" @click="deleteSection" />
       </div>
 
       <div>

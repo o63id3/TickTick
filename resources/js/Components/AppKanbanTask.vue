@@ -3,6 +3,7 @@ import {computed, ref} from "vue";
 import {cva} from "class-variance-authority";
 import AppModal from "@/Components/AppModal.vue";
 import {router, useForm} from "@inertiajs/vue3";
+import {TrashIcon} from "@heroicons/vue/24/outline/index.js";
 
 const props = defineProps({
   task: Object
@@ -10,6 +11,7 @@ const props = defineProps({
 
 const {isNewTaskItemModalOpen, form, submit} = useNewTask()
 const {toggleTask, toggleTaskItem} = useToggle()
+const {deleteTask, deleteTaskItem} = useDelete()
 
 const priorityClass = computed(() => {
   return cva("text-xs rounded px-1 py-0.5", {
@@ -63,6 +65,21 @@ function useToggle() {
     toggleTaskItem
   }
 }
+
+function useDelete() {
+  const deleteTask = () => {
+    router.delete(route('tasks.destroy', props.task.id), {preserveScroll: true})
+  }
+
+  const deleteTaskItem = (itemId) => {
+    router.delete(route('items.destroy', itemId), {preserveScroll: true})
+  }
+
+  return {
+    deleteTask,
+    deleteTaskItem
+  }
+}
 </script>
 
 <template>
@@ -81,6 +98,8 @@ function useToggle() {
             class="select-none ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
             {{ task.title }}
           </label>
+
+          <TrashIcon class="ml-1 size-4 text-red-500 hover:bg-red-500/50 rounded cursor-pointer" @click="deleteTask" />
         </div>
 
         <div v-if="!task.completed">
@@ -107,7 +126,7 @@ function useToggle() {
                 </div>
 
                 <div class="flex items-center justify-end gap-2">
-                  <button @click="isNewTaskModalOpen = false" class="rounded dark:text-white text-sm">Cancel</button>
+                  <button @click="isNewTaskItemModalOpen = false" class="rounded dark:text-white text-sm">Cancel</button>
                   <button type="submit"
                           class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm sm:w-auto px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                     Create
@@ -129,21 +148,29 @@ function useToggle() {
       <div v-if="task.items.length" class="border border-gray-100 dark:border-gray-700 my-2"></div>
 
       <div v-for="taskItem in task.items">
-        <input
-          @change="toggleTaskItem(taskItem.id)"
-          :id="'task-item-' + taskItem.id"
-          :checked="taskItem.completed"
-          type="checkbox"
-          class="w-3 h-3 text-blue-600 bg-gray-100 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700">
-        <label
-          :for="'task-item-' + taskItem.id"
-          class="select-none ms-2 text-xs font-medium"
-          :class="[
+        <div class="flex items-center justify-between">
+          <div>
+            <input
+              @change="toggleTaskItem(taskItem.id)"
+              :id="'task-item-' + taskItem.id"
+              :checked="taskItem.completed"
+              type="checkbox"
+              class="w-3 h-3 text-blue-600 bg-gray-100 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700">
+            <label
+              :for="'task-item-' + taskItem.id"
+              class="select-none ms-2 text-xs font-medium"
+              :class="[
             taskItem.completed ? 'line-through decoration-indigo-900 dark:decoration-indigo-300 text-gray-900/50 dark:text-gray-300/50': 'text-gray-900 dark:text-gray-300'
           ]"
-        >
-          {{ taskItem.title }}
-        </label>
+            >
+              {{ taskItem.title }}
+            </label>
+          </div>
+
+          <div>
+            <TrashIcon class="size-4 text-red-500 hover:bg-red-500/50 rounded cursor-pointer" @click="deleteTaskItem(taskItem.id)" />
+          </div>
+        </div>
       </div>
     </div>
   </div>

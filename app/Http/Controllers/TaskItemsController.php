@@ -33,4 +33,15 @@ class TaskItemsController extends Controller
 
         return back();
     }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(TaskItem $item)
+    {
+        $item->delete();
+
+        return back();
+    }
+
 }

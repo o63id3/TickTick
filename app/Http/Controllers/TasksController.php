@@ -18,4 +18,15 @@ class TasksController extends Controller
 
         return back();
     }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Task $task)
+    {
+        $task->delete();
+
+        return back();
+    }
+
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ListsController;
 use App\Http\Controllers\ListSectionsController;
+use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\SectionTasksController;
 use App\Http\Controllers\TaskItemsController;
 use App\Http\Controllers\TasksController;
@@ -37,6 +38,7 @@ Route::middleware([
     Route::get('/lists', [ListsController::class, 'index'])->name('lists.index');
     Route::get('/lists/{list}', [ListsController::class, 'show'])->name('lists.show');
     Route::post('/lists', [ListsController::class, 'store'])->name('lists.store');
+    Route::delete('/lists/{list}', [ListsController::class, 'destroy'])->name('lists.destroy');
 
     Route::post('/lists/{list}/sections', [ListSectionsController::class, 'store'])->name('list.sections.store');
 });
@@ -47,6 +49,8 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+    Route::delete('/sections/{section}', [SectionsController::class, 'destroy'])->name('sections.destroy');
+
     Route::post('/sections/{section}/tasks', [SectionTasksController::class, 'store'])->name('section.tasks.store');
 });
 
@@ -58,6 +62,8 @@ Route::middleware([
 ])->group(function () {
     Route::post('/tasks/{task}/items', [TaskItemsController::class, 'store'])->name('task.items.store');
     Route::put('/tasks/{task}', [TasksController::class, 'toggle'])->name('tasks.toggle.completed');
+    Route::delete('/tasks/{task}', [TasksController::class, 'destroy'])->name('tasks.destroy');
 
     Route::put('/items/{item}', [TaskItemsController::class, 'toggle'])->name('items.toggle.completed');
+    Route::delete('/items/{item}', [TaskItemsController::class, 'destroy'])->name('items.destroy');
 });
