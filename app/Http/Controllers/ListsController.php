@@ -40,7 +40,13 @@ class ListsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255', 'min:3'],
+        ]);
+
+        $request->user()->lists()->create($validated);
+
+        return back();
     }
 
     /**

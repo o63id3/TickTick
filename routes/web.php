@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\ListsController;
+use App\Http\Controllers\ListSectionsController;
+use App\Http\Controllers\SectionTasksController;
+use App\Http\Controllers\TaskItemsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -32,5 +35,25 @@ Route::middleware([
 ])->group(function () {
     Route::get('/lists', [ListsController::class, 'index'])->name('lists.index');
     Route::get('/lists/{list}', [ListsController::class, 'show'])->name('lists.show');
+    Route::post('/lists', [ListsController::class, 'store'])->name('lists.store');
+
+    Route::post('/lists/{list}/sections', [ListSectionsController::class, 'store'])->name('list.sections.store');
 });
 
+// Sections
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::post('/sections/{section}/tasks', [SectionTasksController::class, 'store'])->name('section.tasks.store');
+});
+
+// Tasks
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::post('/tasks/{task}/items', [TaskItemsController::class, 'store'])->name('task.items.store');
+});

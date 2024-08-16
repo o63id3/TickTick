@@ -31,7 +31,7 @@ function closeModal() {
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <div class="fixed inset-0 bg-black/25" />
+        <div class="fixed inset-0 bg-black/25 dark:bg-black/40" />
       </TransitionChild>
 
       <div class="fixed inset-0 overflow-y-auto">
@@ -59,16 +59,6 @@ function closeModal() {
               <div class="mt-2">
                 <slot />
               </div>
-
-<!--              <div class="mt-4">-->
-<!--                <button-->
-<!--                  type="button"-->
-<!--                  class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"-->
-<!--                  @click="closeModal"-->
-<!--                >-->
-<!--                  Got it, thanks!-->
-<!--                </button>-->
-<!--              </div>-->
             </DialogPanel>
           </TransitionChild>
         </div>
