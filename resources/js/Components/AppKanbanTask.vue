@@ -2,13 +2,14 @@
 import {computed, ref} from "vue";
 import {cva} from "class-variance-authority";
 import AppModal from "@/Components/AppModal.vue";
-import {useForm} from "@inertiajs/vue3";
+import {router, useForm} from "@inertiajs/vue3";
 
 const props = defineProps({
   task: Object
 })
 
 const {isNewTaskItemModalOpen, form, submit} = useNewTask()
+const {toggleTask, toggleTaskItem} = useToggle()
 
 const priorityClass = computed(() => {
   return cva("text-xs rounded px-1 py-0.5", {
@@ -47,6 +48,21 @@ function useNewTask() {
     submit
   }
 }
+
+function useToggle() {
+  const toggleTask = () => {
+    router.put(route('tasks.toggle.completed', props.task.id), undefined, {preserveScroll: true})
+  }
+
+  const toggleTaskItem = (itemId) => {
+    router.put(route('items.toggle.completed', itemId), undefined, {preserveScroll: true})
+  }
+
+  return {
+    toggleTask,
+    toggleTaskItem
+  }
+}
 </script>
 
 <template>
@@ -54,9 +70,12 @@ function useNewTask() {
     <div>
       <div class="flex items-center justify-between mb-4">
         <div class="flex items-center">
-          <input :id="'task-' + task.id" type="checkbox"
-                 :checked="task.completed"
-                 class="w-4 h-4 text-blue-600 bg-gray-100 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700">
+          <input
+            @change="toggleTask"
+            :id="'task-' + task.id"
+            type="checkbox"
+            :checked="task.completed"
+            class="w-4 h-4 text-blue-600 bg-gray-100 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700">
           <label
             :for="'task-' + task.id"
             class="select-none ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -110,9 +129,12 @@ function useNewTask() {
       <div v-if="task.items.length" class="border border-gray-100 dark:border-gray-700 my-2"></div>
 
       <div v-for="taskItem in task.items">
-        <input :id="'task-item-' + taskItem.id" type="checkbox"
-               :checked="taskItem.completed"
-               class="w-3 h-3 text-blue-600 bg-gray-100 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700">
+        <input
+          @change="toggleTaskItem(taskItem.id)"
+          :id="'task-item-' + taskItem.id"
+          :checked="taskItem.completed"
+          type="checkbox"
+          class="w-3 h-3 text-blue-600 bg-gray-100 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700">
         <label
           :for="'task-item-' + taskItem.id"
           class="select-none ms-2 text-xs font-medium"

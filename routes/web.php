@@ -4,6 +4,7 @@ use App\Http\Controllers\ListsController;
 use App\Http\Controllers\ListSectionsController;
 use App\Http\Controllers\SectionTasksController;
 use App\Http\Controllers\TaskItemsController;
+use App\Http\Controllers\TasksController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -56,4 +57,7 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::post('/tasks/{task}/items', [TaskItemsController::class, 'store'])->name('task.items.store');
+    Route::put('/tasks/{task}', [TasksController::class, 'toggle'])->name('tasks.toggle.completed');
+
+    Route::put('/items/{item}', [TaskItemsController::class, 'toggle'])->name('items.toggle.completed');
 });

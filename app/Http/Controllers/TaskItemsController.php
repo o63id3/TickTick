@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\TaskItem;
 use Illuminate\Http\Request;
 
 class TaskItemsController extends Controller
@@ -17,6 +18,18 @@ class TaskItemsController extends Controller
         ]);
 
         $task->items()->create($validated);
+
+        return back();
+    }
+
+    /**
+     * Toggle the specified resource completed in storage.
+     */
+    public function toggle(TaskItem $item, Request $request)
+    {
+        $item->update([
+            'completed' => !$item->completed
+        ]);
 
         return back();
     }
