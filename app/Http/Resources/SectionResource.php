@@ -18,6 +18,7 @@ class SectionResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'list' => $this->whenLoaded('list', fn() => ListResource::make($this->list)),
+            'tasks' => $this->whenLoaded('tasks', fn() => TaskResource::collection($this->tasks)),
             'tasksCount' => $this->whenCounted('tasks'),
             'completedTasksCount' => $this->whenCounted('completedTasks'),
             'uncompletedTasksCount' => $this->whenCounted('uncompletedTasks'),

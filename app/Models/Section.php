@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Section extends Model
 {
@@ -18,7 +19,16 @@ class Section extends Model
 
     public function tasks(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Task::class);
+        return $this->hasMany(Task::class)
+            ->orderBy('completed', 'asc')
+            ->orderByRaw('
+                case
+                    when priority = "None" then 1
+                    when priority = "Low" then 2
+                    when priority = "Medium" then 3
+                    when priority = "High" then 4
+                end desc
+            ');
     }
 
     public function completedTasks(): \Illuminate\Database\Eloquent\Relations\HasMany

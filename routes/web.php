@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ListsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,3 +23,14 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
+
+// Lists
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::get('/lists', [ListsController::class, 'index'])->name('lists.index');
+    Route::get('/lists/{list}', [ListsController::class, 'show'])->name('lists.show');
+});
+

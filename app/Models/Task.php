@@ -31,7 +31,8 @@ class Task extends Model
 
     public function items(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(TaskItem::class);
+        return $this->hasMany(TaskItem::class)
+            ->orderBy('completed');
     }
 
     public function completedItems(): \Illuminate\Database\Eloquent\Relations\HasMany

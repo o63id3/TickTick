@@ -21,6 +21,7 @@ class TaskResource extends JsonResource
             'priority' => $this->priority,
             'completed' => $this->completed,
             'section' => $this->whenLoaded('section', fn() => SectionResource::make($this->section)),
+            'items' => $this->whenLoaded('items', fn() => TaskItemResource::collection($this->items)),
             'taskItemsCount' => $this->whenCounted('items'),
             'completedTaskItemsCount' => $this->whenCounted('completedTaskItems'),
             'uncompletedTaskItemsCount' => $this->whenCounted('uncompletedTaskItems'),
