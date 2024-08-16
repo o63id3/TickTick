@@ -12,6 +12,10 @@ class TasksController extends Controller
      */
     public function toggle(Task $task, Request $request)
     {
+        if (!$task->completed) {
+            $task->items()->update(['completed' => true]);
+        }
+
         $task->update([
             'completed' => !$task->completed
         ]);
