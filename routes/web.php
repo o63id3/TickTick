@@ -6,6 +6,7 @@ use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\SectionTasksController;
 use App\Http\Controllers\TaskItemsController;
 use App\Http\Controllers\TasksController;
+use App\Models\AppList;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -35,13 +36,29 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/lists', [ListsController::class, 'index'])->name('lists.index');
-    Route::get('/lists/{list}', [ListsController::class, 'show'])->name('lists.show');
-    Route::post('/lists', [ListsController::class, 'store'])->name('lists.store');
-    Route::put('/lists/{list}', [ListsController::class, 'update'])->name('lists.update');
-    Route::delete('/lists/{list}', [ListsController::class, 'destroy'])->name('lists.destroy');
+    Route::get('/lists', [ListsController::class, 'index'])
+        ->can('viewAny', AppList::class)
+        ->name('lists.index');
 
-    Route::post('/lists/{list}/sections', [ListSectionsController::class, 'store'])->name('list.sections.store');
+    Route::get('/lists/{list}', [ListsController::class, 'show'])
+        ->can('view,list')
+        ->name('lists.show');
+
+    Route::post('/lists', [ListsController::class, 'store'])
+        ->can('create', AppList::class)
+        ->name('lists.store');
+
+    Route::put('/lists/{list}', [ListsController::class, 'update'])
+        ->can('update,list')
+        ->name('lists.update');
+
+    Route::delete('/lists/{list}', [ListsController::class, 'destroy'])
+        ->can('destroy,list')
+        ->name('lists.destroy');
+
+    Route::post('/lists/{list}/sections', [ListSectionsController::class, 'store'])
+        ->can('createSection,list', AppList::class)
+        ->name('list.sections.store');
 });
 
 // Sections
@@ -50,10 +67,17 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::put('/sections/{section}', [SectionsController::class, 'update'])->name('sections.update');
-    Route::delete('/sections/{section}', [SectionsController::class, 'destroy'])->name('sections.destroy');
+    Route::put('/sections/{section}', [SectionsController::class, 'update'])
+        ->can('update,section')
+        ->name('sections.update');
 
-    Route::post('/sections/{section}/tasks', [SectionTasksController::class, 'store'])->name('section.tasks.store');
+    Route::delete('/sections/{section}', [SectionsController::class, 'destroy'])
+        ->can('delete,section')
+        ->name('sections.destroy');
+
+    Route::post('/sections/{section}/tasks', [SectionTasksController::class, 'store'])
+        ->can('createTask,section')
+        ->name('section.tasks.store');
 });
 
 // Tasks
@@ -62,13 +86,33 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::put('/tasks/{task}', [TasksController::class, 'update'])->name('tasks.update');
-    Route::put('/tasks/{task}/complete', [TasksController::class, 'toggle'])->name('tasks.toggle.completed');
-    Route::delete('/tasks/{task}', [TasksController::class, 'destroy'])->name('tasks.destroy');
+    Route::put('/tasks/{task}', [TasksController::class, 'update'])
+        ->can('update,task')
+        ->name('tasks.update');
 
-    Route::post('/tasks/{task}/items', [TaskItemsController::class, 'store'])->name('task.items.store');
+    Route::put('/tasks/{task}/complete', [TasksController::class, 'toggle'])
+        ->can('toggleComplete,task')
+        ->name('tasks.toggle.completed');
 
-    Route::put('/items/{item}', [TaskItemsController::class, 'update'])->name('items.update');
-    Route::put('/items/{item}/toggle', [TaskItemsController::class, 'toggle'])->name('items.toggle.completed');
-    Route::delete('/items/{item}', [TaskItemsController::class, 'destroy'])->name('items.destroy');
+    Route::delete('/tasks/{task}', [TasksController::class, 'destroy'])
+        ->can('delete,task')
+        ->name('tasks.destroy');
+
+
+    Route::post('/tasks/{task}/items', [TaskItemsController::class, 'store'])
+        ->can('createItem,task')
+        ->name('task.items.store');
+
+
+    Route::put('/items/{item}', [TaskItemsController::class, 'update'])
+        ->can('update,item')
+        ->name('items.update');
+
+    Route::put('/items/{item}/toggle', [TaskItemsController::class, 'toggle'])
+        ->can('toggleComplete,item')
+        ->name('items.toggle.completed');
+
+    Route::delete('/items/{item}', [TaskItemsController::class, 'destroy'])
+        ->can('delete,item')
+        ->name('items.destroy');
 });
