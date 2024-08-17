@@ -1,7 +1,7 @@
 <script setup>
 import AppKanbanTask from "@/Components/AppKanbanTask.vue";
 import AppModal from "@/Components/AppModal.vue";
-import {ref} from "vue";
+import {nextTick, ref} from "vue";
 import {router, useForm} from "@inertiajs/vue3";
 import {TrashIcon} from "@heroicons/vue/24/outline/index.js";
 
@@ -10,6 +10,8 @@ const props = defineProps({
 })
 
 const {isNewTaskModalOpen, priorities, form, submit} = useNewTask()
+const {isEditing, showEditing, name, nameField, save, cancel} = useEdit()
+
 const { deleteSection } = useDelete()
 
 function useNewTask() {
@@ -45,6 +47,42 @@ function useNewTask() {
   }
 }
 
+function useEdit() {
+  const isEditing = ref(false)
+  const name = ref(props.item.name)
+  const nameField = ref(null)
+
+  const showEditing = async () => {
+    isEditing.value = true
+
+    await nextTick()
+    nameField.value.focus()
+  }
+
+  const onSave = () => {
+    router.put(route('sections.update', props.item.id), {name: name.value}, {
+      onError: (err) => {
+        name.value = props.item.name
+      }
+    })
+    isEditing.value = false
+  }
+
+  const onCancel = () => {
+    name.value = props.item.name
+    isEditing.value = false
+  }
+
+  return {
+    isEditing,
+    showEditing,
+    name,
+    nameField,
+    save: onSave,
+    cancel: onCancel,
+  }
+}
+
 function useDelete() {
   const deleteSection = () => {
     router.delete(route('sections.destroy', props.item.id), {preserveScroll: true})
@@ -61,7 +99,15 @@ function useDelete() {
     <!-- board category header -->
     <div class="flex justify-between items-center mb-2 mx-1">
       <div class="flex items-center justify-between">
-        <h2 class="bg-indigo-300 text-sm w-max px-1 rounded mr-2 text-black">{{ item.name }}</h2>
+        <h2 @click="showEditing" v-if="!isEditing" class="bg-indigo-300 text-sm w-max px-1 rounded mr-2 text-black">{{ name }}</h2>
+        <input
+          ref="nameField"
+          @keydown.enter="save"
+          @keydown.esc="cancel"
+          v-if="isEditing"
+          v-model="name"
+          class="w-full bg-transparent border-none focus:ring-0 p-0 m-0 font-semibold text-sm text-gray-800 dark:text-gray-200 leading-tight">
+
         <p class="text-gray-400 dark:text-gray-500 text-sm">({{ item.uncompletedTasksCount }})</p>
         <TrashIcon class="ml-1 size-4 text-red-500 hover:bg-red-500/50 rounded cursor-pointer" @click="deleteSection" />
       </div>

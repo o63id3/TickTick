@@ -1,17 +1,40 @@
 <script setup>
-import {computed, ref} from "vue";
+import {computed, nextTick, ref} from "vue";
 import {cva} from "class-variance-authority";
 import AppModal from "@/Components/AppModal.vue";
 import {router, useForm} from "@inertiajs/vue3";
 import {TrashIcon} from "@heroicons/vue/24/outline/index.js";
+import AppKanbanItem from "@/Components/AppKanbanItem.vue";
 
 const props = defineProps({
   task: Object
 })
 
 const {isNewTaskItemModalOpen, form, submit} = useNewTask()
-const {toggleTask, toggleTaskItem} = useToggle()
-const {deleteTask, deleteTaskItem} = useDelete()
+const {toggleTask} = useToggleComplete()
+const {
+  isEditingTitle,
+  showEditing,
+  title,
+  titleField,
+  save,
+  cancel,
+  isEditingDescription,
+  description,
+  descriptionField,
+  isEditingPriority,
+  priority,
+  priorityField
+} = useEdit()
+
+const priorities = [
+  {name: 'None'},
+  {name: 'Low'},
+  {name: 'Medium'},
+  {name: 'High'}
+]
+
+const {deleteTask} = useDelete()
 
 const priorityClass = computed(() => {
   return cva("text-xs rounded px-1 py-0.5", {
@@ -51,7 +74,7 @@ function useNewTask() {
   }
 }
 
-function useToggle() {
+function useToggleComplete() {
   const toggleTask = () => {
     router.put(route('tasks.toggle.completed', props.task.id), undefined, {preserveScroll: true})
   }
@@ -63,6 +86,81 @@ function useToggle() {
   return {
     toggleTask,
     toggleTaskItem
+  }
+}
+
+function useEdit() {
+  const isEditingTitle = ref(false)
+  const isEditingDescription = ref(false)
+  const isEditingPriority = ref(false)
+
+  const title = ref(props.task.title)
+  const description = ref(props.task.description)
+  const priority = ref(props.task.priority)
+
+  const titleField = ref(null)
+  const descriptionField = ref(null)
+  const priorityField = ref(null)
+
+  const showEditing = async (field) => {
+    if (field === 'title') {
+      isEditingTitle.value = true
+    } else if (field === 'description') {
+      isEditingDescription.value = true
+    } else if (field === 'priority') {
+      isEditingPriority.value = true
+    }
+
+    await nextTick()
+
+    if (field === 'title') {
+      titleField.value.focus()
+    } else if (field === 'description') {
+      descriptionField.value.focus()
+    } else if (field === 'priority') {
+      priorityField.value.focus()
+    }
+  }
+
+  const onSave = () => {
+    router.put(route('tasks.update', props.task.id), {
+      title: title.value,
+      description: description.value,
+      priority: priority.value
+    }, {
+      onError: (err) => {
+        title.value = props.task.title
+      }
+    })
+
+    isEditingTitle.value = false
+    isEditingDescription.value = false
+    isEditingPriority.value = false
+  }
+
+  const onCancel = () => {
+    title.value = props.task.title
+    description.value = props.task.description
+    priority.value = props.task.priority
+
+    isEditingTitle.value = false
+    isEditingDescription.value = false
+    isEditingPriority.value = false
+  }
+
+  return {
+    isEditingTitle,
+    isEditingDescription,
+    isEditingPriority,
+    showEditing,
+    title,
+    description,
+    priority,
+    titleField,
+    descriptionField,
+    priorityField,
+    save: onSave,
+    cancel: onCancel,
   }
 }
 
@@ -89,17 +187,25 @@ function useDelete() {
         <div class="flex items-center">
           <input
             @change="toggleTask"
-            :id="'task-' + task.id"
             type="checkbox"
             :checked="task.completed"
             class="w-4 h-4 text-blue-600 bg-gray-100 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700">
+
           <label
-            :for="'task-' + task.id"
+            @click="showEditing('title')" v-if="!isEditingTitle"
             class="select-none ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-            {{ task.title }}
+            {{ title }}
           </label>
 
-          <TrashIcon class="ml-1 size-4 text-red-500 hover:bg-red-500/50 rounded cursor-pointer" @click="deleteTask" />
+          <input
+            ref="titleField"
+            @keydown.enter="save"
+            @keydown.esc="cancel"
+            v-if="isEditingTitle"
+            v-model="title"
+            class="w-full bg-transparent border-none focus:ring-0 p-0 m-0 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+
+          <TrashIcon class="ml-1 size-4 text-red-500 hover:bg-red-500/50 rounded cursor-pointer" @click="deleteTask"/>
         </div>
 
         <div v-if="!task.completed">
@@ -126,7 +232,8 @@ function useDelete() {
                 </div>
 
                 <div class="flex items-center justify-end gap-2">
-                  <button @click="isNewTaskItemModalOpen = false" class="rounded dark:text-white text-sm">Cancel</button>
+                  <button @click="isNewTaskItemModalOpen = false" class="rounded dark:text-white text-sm">Cancel
+                  </button>
                   <button type="submit"
                           class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm sm:w-auto px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                     Create
@@ -138,40 +245,38 @@ function useDelete() {
         </div>
       </div>
 
+      <p class="flex items-center gap-1 text-white text-xs mt-1">
+        Priority:
+        <span @click="showEditing('priority')" v-if="!isEditingPriority" :class="priorityClass">{{ priority }}</span>
 
-      <p class="text-white text-xs mt-1">
-        Priority: <span :class="priorityClass">{{ task.priority }}</span>
+        <select v-model="priority"
+                class="w-full bg-transparent border-none focus:ring-0 m-0 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block py-0.5 px-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                ref="priorityField"
+                @keydown.enter="save"
+                @keydown.esc="cancel"
+                v-if="isEditingPriority"
+        >
+          <option selected disabled>Task Priority</option>
+          <option v-for="priority in priorities" :key="priority.name" :value="priority.name">
+            {{ priority.name }}
+          </option>
+        </select>
       </p>
 
-      <p class="text-white text-xs mt-1">{{ task.description }}</p>
+      <p @click="showEditing('description')" v-if="!isEditingDescription"
+         class="text-white text-xs mt-1">{{ description }}</p>
+
+      <textarea
+        ref="descriptionField"
+        @keydown.enter="save"
+        @keydown.esc="cancel"
+        v-if="isEditingDescription"
+        v-model="description"
+        class="w-full bg-transparent border-none focus:ring-0 p-0 m-0 text-white text-xs mt-1"/>
 
       <div v-if="task.items.length" class="border border-gray-100 dark:border-gray-700 my-2"></div>
 
-      <div v-for="taskItem in task.items">
-        <div class="flex items-center justify-between">
-          <div>
-            <input
-              @change="toggleTaskItem(taskItem.id)"
-              :id="'task-item-' + taskItem.id"
-              :checked="taskItem.completed"
-              type="checkbox"
-              class="w-3 h-3 text-blue-600 bg-gray-100 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700">
-            <label
-              :for="'task-item-' + taskItem.id"
-              class="select-none ms-2 text-xs font-medium"
-              :class="[
-            taskItem.completed ? 'line-through decoration-indigo-900 dark:decoration-indigo-300 text-gray-900/50 dark:text-gray-300/50': 'text-gray-900 dark:text-gray-300'
-          ]"
-            >
-              {{ taskItem.title }}
-            </label>
-          </div>
-
-          <div>
-            <TrashIcon class="size-4 text-red-500 hover:bg-red-500/50 rounded cursor-pointer" @click="deleteTaskItem(taskItem.id)" />
-          </div>
-        </div>
-      </div>
+      <AppKanbanItem v-for="item in task.items" :item="item" />
     </div>
   </div>
 </template>

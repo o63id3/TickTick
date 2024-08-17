@@ -35,6 +35,21 @@ class TaskItemsController extends Controller
     }
 
     /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, TaskItem $item)
+    {
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255', 'min:3'],
+        ]);
+
+        $item->update($validated);
+
+        return back();
+    }
+
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(TaskItem $item)
