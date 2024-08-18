@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
              'email' => '7osain@mail.ps',
              'password' => '1',
          ]);
-         User::factory(10)->create();
+//         User::factory(10)->create();
 
          $this->call([
              AppListSeeder::class,

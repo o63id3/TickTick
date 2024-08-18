@@ -20,7 +20,8 @@ class ListsController extends Controller
         $lists = auth()->user()
             ->lists()
             ->withCount('uncompletedTasks')
-            ->get();
+            ->latest()
+            ->paginate(12);
 
         return inertia('Lists/Index', [
             'lists' => ListResource::collection($lists),
