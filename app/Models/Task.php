@@ -10,7 +10,7 @@ class Task extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'description', 'priority', 'completed'];
+    protected $fillable = ['title', 'description', 'priority', 'completed_at'];
 
     /**
      * Get the attributes that should be cast.
@@ -32,18 +32,18 @@ class Task extends Model
     public function items(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(TaskItem::class)
-            ->orderBy('completed');
+            ->orderBy('completed_at');
     }
 
     public function completedItems(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(TaskItem::class)
-            ->where('completed', 1);
+            ->whereNotNull('completed_at');
     }
 
     public function uncompletedItems(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(TaskItem::class)
-            ->where('completed', 0);
+            ->whereNull('completed_at');
     }
 }

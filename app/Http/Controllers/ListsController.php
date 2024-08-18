@@ -42,6 +42,7 @@ class ListsController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255', 'min:3'],
+            'description' => ['sometimes', 'string', 'max:1024'],
         ]);
 
         $request->user()->lists()->create($validated);

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('description')->nullable();
             $table->enum('priority', array_column(\App\Enums\TaskPriority::cases(), 'value'))->default('None');
-            $table->boolean('completed')->default(false);
+            $table->timestamp('completed_at')->nullable();
             $table->timestamps();
         });
     }

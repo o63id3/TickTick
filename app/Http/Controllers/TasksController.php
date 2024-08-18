@@ -14,13 +14,17 @@ class TasksController extends Controller
      */
     public function toggle(Task $task, Request $request)
     {
-        if (!$task->completed) {
-            $task->items()->update(['completed' => true]);
-        }
+        if ($task->completed_at === null) {
+            $task->items()->update(['completed_at' => now()]);
 
-        $task->update([
-            'completed' => !$task->completed
-        ]);
+            $task->update([
+                'completed_at' => now()
+            ]);
+        } else {
+            $task->update([
+                'completed_at' => null
+            ]);
+        }
 
         return back();
     }

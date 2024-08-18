@@ -106,6 +106,8 @@ function useDelete() {
 
               <TrashIcon class="size-5 text-red-500 hover:bg-red-500/50 rounded cursor-pointer" @click.stop="deleteList(list.id)" />
             </div>
+
+            <div class="dark:text-white text-sm">{{ list.description }}</div>
           </div>
         </div>
       </div>

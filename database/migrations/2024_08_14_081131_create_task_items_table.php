@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(\App\Models\Task::class)->constrained('tasks')->cascadeOnDelete();
             $table->string('title');
-            $table->boolean('completed')->default(false);
+            $table->timestamp('completed_at')->nullable();
             $table->timestamps();
         });
     }

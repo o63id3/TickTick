@@ -178,7 +178,7 @@ function useDelete() {
         :key="task.id"
         class="p-2 rounded shadow-sm border-2"
         :class="[
-          task.completed ? 'border-indigo-100 dark:border-indigo-700' : 'border-gray-100 dark:border-gray-700'
+          task.completedAt ? 'border-indigo-100 dark:border-indigo-700' : 'border-gray-100 dark:border-gray-700'
         ]"
       />
     </div>

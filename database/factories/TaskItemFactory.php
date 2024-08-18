@@ -19,7 +19,7 @@ class TaskItemFactory extends Factory
     {
         return [
             'title' => $this->faker->name(),
-            'completed' => $this->faker->boolean(),
+            'completed_at' => $this->faker->randomElement([null, now()]),
             'task_id' => Task::factory(),
         ];
     }

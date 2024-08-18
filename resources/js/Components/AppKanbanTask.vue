@@ -188,7 +188,7 @@ function useDelete() {
           <input
             @change="toggleTask"
             type="checkbox"
-            :checked="task.completed"
+            :checked="task.completedAt"
             class="w-4 h-4 text-blue-600 bg-gray-100 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700">
 
           <label
@@ -208,7 +208,7 @@ function useDelete() {
           <TrashIcon class="ml-1 size-4 text-red-500 hover:bg-red-500/50 rounded cursor-pointer" @click="deleteTask"/>
         </div>
 
-        <div v-if="!task.completed">
+        <div v-if="!task.completedAt">
           <div>
             <button
               type="button"

@@ -20,7 +20,7 @@ class Section extends Model
     public function tasks(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Task::class)
-            ->orderBy('completed', 'asc')
+            ->orderBy('completed_at', 'asc')
             ->orderByRaw('
                 case
                     when priority = "None" then 1
@@ -34,12 +34,12 @@ class Section extends Model
     public function completedTasks(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Task::class)
-            ->where('completed', 1);
+            ->whereNotNull('completed_at');
     }
 
     public function uncompletedTasks(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Task::class)
-            ->where('completed', 0);
+            ->whereNull('completed_at');
     }
 }

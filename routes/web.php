@@ -53,7 +53,7 @@ Route::middleware([
         ->name('lists.update');
 
     Route::delete('/lists/{list}', [ListsController::class, 'destroy'])
-        ->can('destroy,list')
+        ->can('delete,list')
         ->name('lists.destroy');
 
     Route::post('/lists/{list}/sections', [ListSectionsController::class, 'store'])

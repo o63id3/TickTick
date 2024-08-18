@@ -27,9 +27,15 @@ class TaskItemsController extends Controller
      */
     public function toggle(TaskItem $item, Request $request)
     {
-        $item->update([
-            'completed' => !$item->completed
-        ]);
+        if ($item->completed_at === null) {
+            $item->update([
+                'completed_at' => now()
+            ]);
+        } else {
+            $item->update([
+                'completed_at' => null
+            ]);
+        }
 
         return back();
     }

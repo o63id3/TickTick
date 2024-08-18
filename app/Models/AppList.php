@@ -11,7 +11,7 @@ class AppList extends Model
 
     protected $table = 'lists';
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'description'];
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -31,12 +31,12 @@ class AppList extends Model
     public function completedTasks(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
     {
         return $this->hasManyThrough(Task::class, Section::class, 'list_id', 'section_id')
-            ->where('completed', 1);
+            ->whereNotNull('completed_at');
     }
 
     public function uncompletedTasks(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
     {
         return $this->hasManyThrough(Task::class, Section::class, 'list_id', 'section_id')
-            ->where('completed', 0);
+            ->whereNull('completed_at');
     }
 }

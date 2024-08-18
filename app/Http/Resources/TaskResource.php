@@ -19,7 +19,7 @@ class TaskResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'priority' => $this->priority,
-            'completed' => $this->completed,
+            'completedAt' => $this->completed_at,
             'section' => $this->whenLoaded('section', fn() => SectionResource::make($this->section)),
             'items' => $this->whenLoaded('items', fn() => TaskItemResource::collection($this->items)),
             'taskItemsCount' => $this->whenCounted('items'),

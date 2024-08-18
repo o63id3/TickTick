@@ -17,7 +17,7 @@ class TaskItemResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'completed' => $this->completed,
+            'completedAt' => $this->completed_at,
             'task' => $this->whenLoaded('task'),
         ];
     }

@@ -86,14 +86,14 @@ function useDelete() {
       <input
         @change="toggleTaskItem()"
         :id="'task-item-' + item.id"
-        :checked="item.completed"
+        :checked="item.completedAt"
         type="checkbox"
         class="w-3 h-3 text-blue-600 bg-gray-100 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700">
       <label
         @click="showEditing" v-if="!isEditing"
         class="select-none ms-2 text-xs font-medium"
         :class="[
-            item.completed ? 'line-through decoration-indigo-900 dark:decoration-indigo-300 text-gray-900/50 dark:text-gray-300/50': 'text-gray-900 dark:text-gray-300'
+            item.completedAt ? 'line-through decoration-indigo-900 dark:decoration-indigo-300 text-gray-900/50 dark:text-gray-300/50': 'text-gray-900 dark:text-gray-300'
           ]"
       >
         {{ item.title }}

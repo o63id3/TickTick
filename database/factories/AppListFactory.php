@@ -18,7 +18,8 @@ class AppListFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
+            'name' => $this->faker->words(3, true),
+            'description' => $this->faker->realText(200),
             'user_id' => User::factory(),
         ];
     }

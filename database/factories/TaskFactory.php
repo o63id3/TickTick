@@ -18,10 +18,10 @@ class TaskFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->name(),
-            'description' => $this->faker->text(),
+            'title' => $this->faker->words(3, true),
+            'description' => $this->faker->realText(100),
             'priority' => $this->faker->randomElement(array_column(\App\Enums\TaskPriority::cases(), 'value')),
-            'completed' => $this->faker->boolean(),
+            'completed_at' => $this->faker->randomElement([null, now()]),
             'section_id' => Section::factory(),
         ];
     }
