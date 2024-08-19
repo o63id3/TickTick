@@ -135,6 +135,6 @@ function useEdit() {
       </div>
     </template>
 
-    <AppKanban :items="sections"/>
+    <AppKanban :sections="sections"/>
   </AppLayout>
 </template>

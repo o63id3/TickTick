@@ -6,7 +6,7 @@ import {router, useForm} from "@inertiajs/vue3";
 import {TrashIcon} from "@heroicons/vue/24/outline/index.js";
 
 const props = defineProps({
-  item: Object
+  section: Object
 })
 
 const {isNewTaskModalOpen, priorities, form, submit} = useNewTask()
@@ -31,7 +31,7 @@ function useNewTask() {
   })
 
   const submit = () => {
-    form.post(route('section.tasks.store', props.item.id), {
+    form.post(route('section.tasks.store', props.section.id), {
       onSuccess: () => {
         isNewTaskModalOpen.value = false
         form.reset()
@@ -49,7 +49,7 @@ function useNewTask() {
 
 function useEdit() {
   const isEditing = ref(false)
-  const name = ref(props.item.name)
+  const name = ref(props.section.name)
   const nameField = ref(null)
 
   const showEditing = async () => {
@@ -60,16 +60,16 @@ function useEdit() {
   }
 
   const onSave = () => {
-    router.put(route('sections.update', props.item.id), {name: name.value}, {
+    router.put(route('sections.update', props.section.id), {name: name.value}, {
       onError: (err) => {
-        name.value = props.item.name
+        name.value = props.section.name
       }
     })
     isEditing.value = false
   }
 
   const onCancel = () => {
-    name.value = props.item.name
+    name.value = props.section.name
     isEditing.value = false
   }
 
@@ -85,7 +85,7 @@ function useEdit() {
 
 function useDelete() {
   const deleteSection = () => {
-    router.delete(route('sections.destroy', props.item.id), {preserveScroll: true})
+    router.delete(route('sections.destroy', props.section.id), {preserveScroll: true})
   }
 
   return {
@@ -108,7 +108,7 @@ function useDelete() {
           v-model="name"
           class="w-full bg-transparent border-none focus:ring-0 p-0 m-0 font-semibold text-sm text-gray-800 dark:text-gray-200 leading-tight">
 
-        <p class="text-gray-400 dark:text-gray-500 text-sm">({{ item.uncompletedTasksCount }})</p>
+        <p class="text-gray-400 dark:text-gray-500 text-sm">({{ section.uncompletedTasksCount }})</p>
         <TrashIcon class="ml-1 size-4 text-red-500 hover:bg-red-500/50 rounded cursor-pointer" @click="deleteSection" />
       </div>
 
@@ -173,7 +173,7 @@ function useDelete() {
 
     <div class="grid gap-2">
       <AppKanbanTask
-        v-for="task in item.tasks"
+        v-for="task in section.tasks"
         :task="task"
         :key="task.id"
         class="p-2 rounded shadow-sm border-2"

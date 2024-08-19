@@ -40,10 +40,6 @@ Route::middleware([
         ->can('viewAny', AppList::class)
         ->name('lists.index');
 
-    Route::get('/lists/{list}', [ListsController::class, 'show'])
-        ->can('view,list')
-        ->name('lists.show');
-
     Route::post('/lists', [ListsController::class, 'store'])
         ->can('create', AppList::class)
         ->name('lists.store');
@@ -55,6 +51,10 @@ Route::middleware([
     Route::delete('/lists/{list}', [ListsController::class, 'destroy'])
         ->can('delete,list')
         ->name('lists.destroy');
+
+    Route::get('/lists/{list}/sections', [ListSectionsController::class, 'index'])
+        ->can('view,list')
+        ->name('lists.show');
 
     Route::post('/lists/{list}/sections', [ListSectionsController::class, 'store'])
         ->can('createSection,list', AppList::class)

@@ -1,15 +1,15 @@
 <script setup>
-import AppKanbanItem from "@/Components/AppKanbanSection.vue";
+import AppKanbanSection from "@/Components/AppKanbanSection.vue";
 
 defineProps({
-  items: Array
+  sections: Array
 })
 </script>
 
 <template>
   <div class="p-2">
     <div class="grid lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-5">
-      <AppKanbanItem v-for="item in items" :key="item.id" :item="item" />
+      <AppKanbanSection v-for="section in sections" :key="section.id" :section="section" />
     </div>
   </div>
 </template>

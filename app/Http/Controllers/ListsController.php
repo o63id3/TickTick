@@ -54,12 +54,9 @@ class ListsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(AppList $list): \Inertia\Response
+    public function show(AppList $list)
     {
-        return Inertia::render('Lists/Show', [
-            'list' => new ListResource($list),
-            'sections' => SectionResource::collection($list->sections()->withCount('uncompletedTasks')->with(['tasks', 'tasks.items'])->get()),
-        ]);
+
     }
 
     /**
