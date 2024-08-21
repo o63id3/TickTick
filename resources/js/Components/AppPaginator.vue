@@ -7,12 +7,31 @@ defineProps({
 </script>
 
 <template>
-  <div class="flex items-center justify-between border-t border-gray-200 bg-white dark:border-gray-900 dark:bg-gray-800 px-4 py-3 sm:px-6">
+  <div class="px-4 py-3 sm:px-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
     <div class="flex flex-1 justify-between sm:hidden">
-      <Link :href="meta.links[0].url ?? '#'"
-         class="relative inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-black/20 dark:text-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:hover:bg-black/30">Previous</Link>
-      <Link :href="meta.links[meta.links.length - 1].url ?? '#'"
-         class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-black/20 dark:text-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:hover:bg-black/30">Next</Link>
+      <component
+        :is="meta.links[0].url && !meta.links[0].active ? Link: 'span'"
+        :href="meta.links[0].url"
+        aria-current="page"
+        class="relative inline-flex items-center px-4 py-2 text-sm font-semibold rounded"
+        :class="[
+              meta.links[0].active? 'z-10 bg-indigo-600 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600': 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 dark:bg-black/20 dark:text-white dark:hover:bg-black/30 dark:border-gray-600 dark:ring-gray-600',
+            ]"
+      >
+        {{ meta.links[0].label }}
+      </component>
+
+      <component
+        :is="meta.links[meta.links.length - 1].url && !meta.links[meta.links.length - 1].active ? Link: 'span'"
+        :href="meta.links[meta.links.length - 1].url"
+        aria-current="page"
+        class="relative inline-flex items-center px-4 py-2 text-sm font-semibold rounded"
+        :class="[
+              meta.links[meta.links.length - 1].active? 'z-10 bg-indigo-600 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600': 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 dark:bg-black/20 dark:text-white dark:hover:bg-black/30 dark:border-gray-600 dark:ring-gray-600',
+            ]"
+      >
+        {{ meta.links[meta.links.length - 1].label }}
+      </component>
     </div>
     <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
       <div>
@@ -34,18 +53,19 @@ defineProps({
       </div>
       <div>
         <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-          <Link
+          <component
+            :is="link.url && !link.active ? Link: 'span'"
             v-for="link in meta.links"
             :key="link.label"
-            :href="link.url ?? '#'"
+            :href="link.url"
             aria-current="page"
             class="relative inline-flex items-center px-4 py-2 text-sm font-semibold first:rounded-l last:rounded-r"
             :class="[
               link.active? 'z-10 bg-indigo-600 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600': 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 dark:bg-black/20 dark:text-white dark:hover:bg-black/30 dark:border-gray-600 dark:ring-gray-600',
-              link.url? '': 'cursor-not-allowed disabled'
             ]"
-          >{{ link.label }}
-          </Link>
+          >
+            {{ link.label }}
+          </component>
         </nav>
       </div>
     </div>

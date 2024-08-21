@@ -54,7 +54,7 @@ Route::middleware([
 
     Route::get('/lists/{list}/sections', [ListSectionsController::class, 'index'])
         ->can('view,list')
-        ->name('lists.show');
+        ->name('list.sections.index');
 
     Route::post('/lists/{list}/sections', [ListSectionsController::class, 'store'])
         ->can('createSection,list', AppList::class)
