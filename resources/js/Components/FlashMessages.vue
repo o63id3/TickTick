@@ -1,3 +1,14 @@
+<script setup>
+import {ref, watch} from "vue";
+import {usePage} from "@inertiajs/vue3";
+
+const show = ref(true)
+
+watch(usePage().props.flash, () => {
+  this.show = true
+}, { deep: true })
+</script>
+
 <template>
   <div class="fixed w-full right-4 bottom-4 max-w-xs">
     <div v-if="$page.props.flash.success && show" class="flex items-center justify-between mb-8 max-w-3xl bg-green-500 rounded">
@@ -24,21 +35,3 @@
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      show: true,
-    }
-  },
-  watch: {
-    '$page.props.flash': {
-      handler() {
-        this.show = true
-      },
-      deep: true,
-    },
-  },
-}
-</script>
