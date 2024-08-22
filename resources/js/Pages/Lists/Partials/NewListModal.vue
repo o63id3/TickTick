@@ -21,11 +21,10 @@ const submit = () => {
     }
   })
 }
-
 </script>
 
 <template>
-  <AppModal :is-open="open" @close="emit('close')">
+  <AppModal :is-open="open" @close="emit('close')" @keydown.enter.prevent="submit">
     <template #title>Create New List</template>
 
     <form @submit.prevent="submit" class="flex flex-col gap-4">
@@ -51,7 +50,9 @@ const submit = () => {
       <div class="flex items-center justify-end gap-2">
         <button @click.prevent="emit('close')" class="rounded dark:text-white text-sm">Cancel</button>
         <button type="submit"
-                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm sm:w-auto px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm sm:w-auto px-3 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:cursor-not-allowed"
+                :disabled="form.processing"
+        >
           Create
         </button>
       </div>
