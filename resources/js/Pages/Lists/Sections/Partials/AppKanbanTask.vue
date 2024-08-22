@@ -8,6 +8,7 @@ import NewTaskModal from "@/Pages/Lists/Sections/Partials/NewTaskItemModal.vue";
 import EditableField from "@/Components/EditableField.vue";
 import EditableTextArea from "@/Components/EditableTextArea.vue";
 import EditableSelect from "@/Components/EditableSelect.vue";
+import moment from "moment";
 
 const props = defineProps({
   task: Object
@@ -158,6 +159,8 @@ function useDelete() {
       >
         <p class="text-white text-xs mt-1">{{ editingForm.description }}</p>
       </EditableTextArea>
+
+      <div v-if="task.completedAt" class="text-xs pt-1 dark:text-gray-400">completed {{ moment(task.completedAt).fromNow() }}</div>
 
       <div v-if="task.items.length || !task.completedAt" class="border border-gray-100 dark:border-gray-700 my-2"></div>
 

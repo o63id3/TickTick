@@ -37,6 +37,7 @@ const priorityClass = computed(() => {
       {{ task.description }}
     </p>
 
-    <span class="text-xs">{{ moment(task.createdAt).from(new Date()) }}</span>
+    <div v-if="task.completedAt" class="text-xs pt-1 dark:text-gray-400">Completed {{ moment(task.completedAt).fromNow() }}</div>
+    <span v-else class="text-xs pt-1 dark:text-gray-400">Created {{ moment(task.createdAt).from(new Date()) }}</span>
   </div>
 </template>
