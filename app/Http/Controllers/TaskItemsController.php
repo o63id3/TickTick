@@ -20,7 +20,7 @@ class TaskItemsController extends Controller
 
         $task->items()->create($validated);
 
-        return back();
+        return back()->with('success', 'Item created successfully!');
     }
 
     /**
@@ -38,7 +38,7 @@ class TaskItemsController extends Controller
             ]);
         }
 
-        return back();
+        return back()->with('success', 'Item toggled successfully!');
     }
 
     /**
@@ -52,18 +52,18 @@ class TaskItemsController extends Controller
 
         $item->update($validated);
 
-        return back();
+        return back()->with('success', 'Item updated successfully!');
     }
 
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(TaskItem $item)
+    public function destroy(TaskItem $item): RedirectResponse
     {
         $item->delete();
 
-        return back();
+        return back()->with('success', 'Item deleted successfully!');
     }
 
 }

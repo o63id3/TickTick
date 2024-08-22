@@ -41,6 +41,6 @@ class ListSectionsController extends Controller
 
         $list->sections()->create($validated);
 
-        return back();
+        return back()->with('success', 'Section created successfully!');
     }
 }

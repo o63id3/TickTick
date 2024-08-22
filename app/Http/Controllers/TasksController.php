@@ -53,7 +53,7 @@ class TasksController extends Controller
             ]);
         }
 
-        return back();
+        return back()->with('success', 'Task toggled successfully!');
     }
 
     /**
@@ -69,7 +69,7 @@ class TasksController extends Controller
 
         $task->update($validated);
 
-        return back();
+        return back()->with('success', 'Task updated successfully!');
     }
 
 
@@ -80,7 +80,7 @@ class TasksController extends Controller
     {
         $task->delete();
 
-        return back();
+        return back()->with('success', 'Task deleted successfully!');
     }
 
 }

@@ -6,6 +6,7 @@ use App\Http\Resources\ListResource;
 use App\Models\AppList;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Inertia\Response;
 use Inertia\ResponseFactory;
 
@@ -39,7 +40,7 @@ class ListsController extends Controller
 
         $request->user()->lists()->create($validated);
 
-        return back();
+        return back()->with('success', 'List created successfully!');
     }
 
     /**
@@ -54,7 +55,7 @@ class ListsController extends Controller
 
         $list->update($validated);
 
-        return back();
+        return back()->with('success', 'List updated successfully!');
     }
 
     /**
@@ -64,6 +65,6 @@ class ListsController extends Controller
     {
         $list->delete();
 
-        return back();
+        return back()->with('success', 'List deleted successfully!');
     }
 }

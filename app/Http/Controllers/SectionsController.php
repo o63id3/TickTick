@@ -19,7 +19,7 @@ class SectionsController extends Controller
 
         $section->update($validated);
 
-        return back();
+        return back()->with('success', 'Section updated successfully!');
     }
 
     /**
@@ -29,6 +29,6 @@ class SectionsController extends Controller
     {
         $section->delete();
 
-        return back();
+        return back()->with('success', 'Section deleted successfully!');
     }
 }

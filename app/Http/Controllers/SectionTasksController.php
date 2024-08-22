@@ -23,6 +23,6 @@ class SectionTasksController extends Controller
 
         $section->tasks()->create($validated);
 
-        return back();
+        return back()->with('success', 'Task created successfully!');
     }
 }
