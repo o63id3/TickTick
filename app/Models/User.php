@@ -4,11 +4,13 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 class User extends Authenticatable
@@ -65,12 +67,12 @@ class User extends Authenticatable
         ];
     }
 
-    public function lists(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function lists(): HasMany
     {
         return $this->hasMany(AppList::class);
     }
 
-    public function tasks(): \Staudenmeir\EloquentHasManyDeep\HasManyDeep
+    public function tasks(): HasManyDeep
     {
         return $this->hasManyDeep(
             Task::class,
@@ -83,7 +85,7 @@ class User extends Authenticatable
             ->with(['section:id,list_id,name', 'section.list:id,name']);
     }
 
-    public function recentlyCreatedTasks(): \Staudenmeir\EloquentHasManyDeep\HasManyDeep
+    public function recentlyCreatedTasks(): HasManyDeep
     {
         return $this
             ->tasks()
@@ -91,7 +93,7 @@ class User extends Authenticatable
             ->orderByDesc('created_at');
     }
 
-    public function completedTasks(): \Staudenmeir\EloquentHasManyDeep\HasManyDeep
+    public function completedTasks(): HasManyDeep
     {
         return $this
             ->tasks()
@@ -106,7 +108,7 @@ class User extends Authenticatable
             ');
     }
 
-    public function recentlyCompletedTasks(): \Staudenmeir\EloquentHasManyDeep\HasManyDeep
+    public function recentlyCompletedTasks(): HasManyDeep
     {
         return $this
             ->tasks()
@@ -114,7 +116,7 @@ class User extends Authenticatable
             ->orderByDesc('completed_at');
     }
 
-    public function uncompletedTasks(): \Staudenmeir\EloquentHasManyDeep\HasManyDeep
+    public function uncompletedTasks(): HasManyDeep
     {
         return $this
             ->tasks()
@@ -122,7 +124,7 @@ class User extends Authenticatable
             ->whereNull('completed_at');
     }
 
-    public function highPriorityTasks(): \Staudenmeir\EloquentHasManyDeep\HasManyDeep
+    public function highPriorityTasks(): HasManyDeep
     {
         return $this
             ->tasks()

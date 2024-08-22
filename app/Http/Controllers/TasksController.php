@@ -5,15 +5,18 @@ namespace App\Http\Controllers;
 use App\Enums\TaskPriority;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Enum;
+use Inertia\Response;
+use Inertia\ResponseFactory;
 
 class TasksController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): \Inertia\Response|\Inertia\ResponseFactory
+    public function index(Request $request): Response|ResponseFactory
     {
         return inertia('Tasks/Index', [
             'tasks' => [
@@ -36,7 +39,7 @@ class TasksController extends Controller
     /**
      * Toggle the specified resource completed in storage.
      */
-    public function toggle(Task $task, Request $request): \Illuminate\Http\RedirectResponse
+    public function toggle(Task $task, Request $request): RedirectResponse
     {
         if ($task->completed_at === null) {
             $task->items()->update(['completed_at' => now()]);
@@ -56,7 +59,7 @@ class TasksController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task): \Illuminate\Http\RedirectResponse
+    public function update(Request $request, Task $task): RedirectResponse
     {
         $validated = $request->validate([
             'title' => ['sometimes', 'string', 'max:255', 'min:3'],
@@ -73,7 +76,7 @@ class TasksController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Task $task): \Illuminate\Http\RedirectResponse
+    public function destroy(Task $task): RedirectResponse
     {
         $task->delete();
 

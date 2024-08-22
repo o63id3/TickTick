@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Enums\TaskPriority;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TaskItem extends Model
 {
@@ -12,7 +12,7 @@ class TaskItem extends Model
 
     protected $fillable = ['title', 'completed_at'];
 
-    public function task(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function task(): BelongsTo
     {
         return $this->belongsTo(Task::class);
     }

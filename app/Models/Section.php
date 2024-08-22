@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 
 class Section extends Model
@@ -12,12 +14,12 @@ class Section extends Model
 
     protected $fillable = ['name'];
 
-    public function list(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function list(): BelongsTo
     {
         return $this->belongsTo(AppList::class, 'list_id');
     }
 
-    public function tasks(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function tasks(): HasMany
     {
         return $this->hasMany(Task::class)
             ->orderBy('completed_at', 'asc')
@@ -31,13 +33,13 @@ class Section extends Model
             ');
     }
 
-    public function completedTasks(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function completedTasks(): HasMany
     {
         return $this->hasMany(Task::class)
             ->whereNotNull('completed_at');
     }
 
-    public function uncompletedTasks(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function uncompletedTasks(): HasMany
     {
         return $this->hasMany(Task::class)
             ->whereNull('completed_at');

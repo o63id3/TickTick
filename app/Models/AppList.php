@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class AppList extends Model
 {
@@ -13,28 +16,28 @@ class AppList extends Model
 
     protected $fillable = ['name', 'description'];
 
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function sections(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function sections(): HasMany
     {
         return $this->hasMany(Section::class, 'list_id');
     }
 
-    public function tasks(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
+    public function tasks(): HasManyThrough
     {
         return $this->hasManyThrough(Task::class, Section::class, 'list_id', 'section_id');
     }
 
-    public function completedTasks(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
+    public function completedTasks(): HasManyThrough
     {
         return $this->hasManyThrough(Task::class, Section::class, 'list_id', 'section_id')
             ->whereNotNull('completed_at');
     }
 
-    public function uncompletedTasks(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
+    public function uncompletedTasks(): HasManyThrough
     {
         return $this->hasManyThrough(Task::class, Section::class, 'list_id', 'section_id')
             ->whereNull('completed_at');

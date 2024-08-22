@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Enums\TaskPriority;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Task extends Model
 {
@@ -24,24 +26,24 @@ class Task extends Model
         ];
     }
 
-    public function section(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function section(): BelongsTo
     {
         return $this->belongsTo(Section::class);
     }
 
-    public function items(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function items(): HasMany
     {
         return $this->hasMany(TaskItem::class)
             ->orderBy('completed_at');
     }
 
-    public function completedItems(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function completedItems(): HasMany
     {
         return $this->hasMany(TaskItem::class)
             ->whereNotNull('completed_at');
     }
 
-    public function uncompletedItems(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function uncompletedItems(): HasMany
     {
         return $this->hasMany(TaskItem::class)
             ->whereNull('completed_at');

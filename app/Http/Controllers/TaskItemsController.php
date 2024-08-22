@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use App\Models\TaskItem;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class TaskItemsController extends Controller
@@ -11,7 +12,7 @@ class TaskItemsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Task $task, Request $request)
+    public function store(Task $task, Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255', 'min:3'],
@@ -25,7 +26,7 @@ class TaskItemsController extends Controller
     /**
      * Toggle the specified resource completed in storage.
      */
-    public function toggle(TaskItem $item, Request $request)
+    public function toggle(TaskItem $item, Request $request): RedirectResponse
     {
         if ($item->completed_at === null) {
             $item->update([
@@ -43,7 +44,7 @@ class TaskItemsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, TaskItem $item)
+    public function update(Request $request, TaskItem $item): RedirectResponse
     {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255', 'min:3'],
