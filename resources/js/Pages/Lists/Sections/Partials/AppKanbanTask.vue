@@ -165,7 +165,7 @@ function useDelete() {
       <div v-if="task.items.length || !task.completedAt" class="border border-gray-100 dark:border-gray-700 my-2"></div>
 
       <div class="grid gap-2">
-        <AppKanbanItem v-for="item in task.items" :item="item"/>
+        <AppKanbanItem v-for="item in task.items" :key="item.id" :item="item"/>
 
         <div
           v-if="!task.completedAt"

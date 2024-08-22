@@ -14,10 +14,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        ini_set('memory_limit', '-1');
+
          User::factory()->create([
-             'name' => 'Hussein K. Abu Eliewa',
-             'email' => '7osain@mail.ps',
-             'password' => '1',
+             'name' => 'Demo user',
+             'email' => 'demo@mail.com',
          ]);
 //         User::factory(10)->create();
 

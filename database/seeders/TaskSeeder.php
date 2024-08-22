@@ -16,6 +16,6 @@ class TaskSeeder extends Seeder
     {
         $sections = Section::all();
 
-        Task::factory(300)->recycle($sections)->create();
+        Task::factory($sections->count() * 15)->recycle($sections)->create();
     }
 }

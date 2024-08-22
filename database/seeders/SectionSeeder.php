@@ -16,6 +16,6 @@ class SectionSeeder extends Seeder
     {
         $lists = AppList::all();
 
-        Section::factory(100)->recycle($lists)->create();
+        Section::factory($lists->count() * 5)->recycle($lists)->create();
     }
 }

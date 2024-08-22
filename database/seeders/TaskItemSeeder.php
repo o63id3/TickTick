@@ -16,6 +16,6 @@ class TaskItemSeeder extends Seeder
     {
         $tasks = Task::all();
 
-        TaskItem::factory(100)->recycle($tasks)->create();
+        TaskItem::factory($tasks->count() * 2)->recycle($tasks)->create();
     }
 }

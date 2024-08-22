@@ -16,6 +16,6 @@ class AppListSeeder extends Seeder
     {
         $users = User::all();
 
-        AppList::factory(20)->recycle($users)->create();
+        AppList::factory($users->count() * 10)->recycle($users)->create();
     }
 }
