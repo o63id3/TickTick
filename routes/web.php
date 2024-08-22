@@ -25,9 +25,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [TasksController::class, 'index'])->name('dashboard');
 });
 
 // Lists
@@ -86,6 +84,10 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+    Route::get('/tasks', [TasksController::class, 'index'])
+        ->can('viewAny', \App\Models\Task::class)
+        ->name('tasks.index');
+
     Route::put('/tasks/{task}', [TasksController::class, 'update'])
         ->can('update,task')
         ->name('tasks.update');

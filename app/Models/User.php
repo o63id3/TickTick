@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 class User extends Authenticatable
 {
@@ -17,6 +18,7 @@ class User extends Authenticatable
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
+    use HasRelationships;
 
     /**
      * The attributes that are mass assignable.
@@ -66,5 +68,72 @@ class User extends Authenticatable
     public function lists(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(AppList::class);
+    }
+
+    public function tasks(): \Staudenmeir\EloquentHasManyDeep\HasManyDeep
+    {
+        return $this->hasManyDeep(
+            Task::class,
+            [AppList::class, Section::class],
+            [
+                'user_id',
+                'list_id',
+                'section_id'
+            ])
+            ->with(['section:id,list_id,name', 'section.list:id,name']);
+    }
+
+    public function recentlyCreatedTasks(): \Staudenmeir\EloquentHasManyDeep\HasManyDeep
+    {
+        return $this
+            ->tasks()
+            ->where('tasks.created_at', '>', now()->subDay())
+            ->orderByDesc('created_at');
+    }
+
+    public function completedTasks(): \Staudenmeir\EloquentHasManyDeep\HasManyDeep
+    {
+        return $this
+            ->tasks()
+            ->whereNotNull('completed_at')
+            ->orderByRaw('
+                case
+                    when priority = "None" then 1
+                    when priority = "Low" then 2
+                    when priority = "Medium" then 3
+                    when priority = "High" then 4
+                end desc
+            ');
+    }
+
+    public function recentlyCompletedTasks(): \Staudenmeir\EloquentHasManyDeep\HasManyDeep
+    {
+        return $this
+            ->tasks()
+            ->whereNotNull('completed_at')
+            ->orderByDesc('completed_at');
+    }
+
+    public function uncompletedTasks(): \Staudenmeir\EloquentHasManyDeep\HasManyDeep
+    {
+        return $this
+            ->tasks()
+            ->latest()
+            ->whereNull('completed_at');
+    }
+
+    public function highPriorityTasks(): \Staudenmeir\EloquentHasManyDeep\HasManyDeep
+    {
+        return $this
+            ->tasks()
+            ->whereNull('completed_at')
+            ->orderByRaw('
+                case
+                    when priority = "None" then 1
+                    when priority = "Low" then 2
+                    when priority = "Medium" then 3
+                    when priority = "High" then 4
+                end desc
+            ');
     }
 }

@@ -17,7 +17,7 @@ class ListResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'description' => $this->description,
+            'description' => $this->when($this->description, $this->description),
             'user' => $this->whenLoaded('user', fn() => UserResource::make($this->user)),
             'tasksCount' => $this->whenCounted('tasks'),
             'completedTasksCount' => $this->whenCounted('completedTasks'),

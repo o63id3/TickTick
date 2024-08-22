@@ -21,6 +21,8 @@
     "dependencies": {
         "@headlessui/vue": "^1.7.22",
         "@heroicons/vue": "^2.1.5",
-        "class-variance-authority": "^0.7.0"
+        "class-variance-authority": "^0.7.0",
+        "lodash": "^4.17.21",
+        "moment": "^2.30.1"
     }
 }

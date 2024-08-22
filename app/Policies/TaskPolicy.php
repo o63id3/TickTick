@@ -9,6 +9,14 @@ use Illuminate\Auth\Access\Response;
 class TaskPolicy
 {
     /**
+     * Determine whether the user can view any models.
+     */
+    public function viewAny(User $user)
+    {
+        return $user !== null;
+    }
+
+    /**
      * Determine whether the user can add item to the task.
      */
     public function createItem(User $user, Task $task): bool

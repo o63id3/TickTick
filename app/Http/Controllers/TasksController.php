@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\TaskPriority;
+use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Enum;
@@ -10,9 +11,32 @@ use Illuminate\Validation\Rules\Enum;
 class TasksController extends Controller
 {
     /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request): \Inertia\Response|\Inertia\ResponseFactory
+    {
+        return inertia('Tasks/Index', [
+            'tasks' => [
+                'recentlyCreated' => TaskResource::collection(
+                    $request->user()->recentlyCreatedTasks()->take(6)->get()
+                ),
+                'recentlyCompleted' => TaskResource::collection(
+                    $request->user()->recentlyCompletedTasks()->take(6)->get()
+                ),
+                'notCompleted' => TaskResource::collection(
+                    $request->user()->uncompletedTasks()->take(6)->get()
+                ),
+                'highPriority' => TaskResource::collection(
+                    $request->user()->highPriorityTasks()->take(6)->get()
+                ),
+            ],
+        ]);
+    }
+
+    /**
      * Toggle the specified resource completed in storage.
      */
-    public function toggle(Task $task, Request $request)
+    public function toggle(Task $task, Request $request): \Illuminate\Http\RedirectResponse
     {
         if ($task->completed_at === null) {
             $task->items()->update(['completed_at' => now()]);
@@ -32,7 +56,7 @@ class TasksController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(Request $request, Task $task): \Illuminate\Http\RedirectResponse
     {
         $validated = $request->validate([
             'title' => ['sometimes', 'string', 'max:255', 'min:3'],
@@ -49,7 +73,7 @@ class TasksController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Task $task)
+    public function destroy(Task $task): \Illuminate\Http\RedirectResponse
     {
         $task->delete();
 

@@ -20,11 +20,12 @@ class TaskResource extends JsonResource
             'description' => $this->description,
             'priority' => $this->priority,
             'completedAt' => $this->completed_at,
+            'createdAt' => $this->created_at,
             'section' => $this->whenLoaded('section', fn() => SectionResource::make($this->section)),
             'items' => $this->whenLoaded('items', fn() => TaskItemResource::collection($this->items)),
             'taskItemsCount' => $this->whenCounted('items'),
-            'completedTaskItemsCount' => $this->whenCounted('completedTaskItems'),
-            'uncompletedTaskItemsCount' => $this->whenCounted('uncompletedTaskItems'),
+            'completedTaskItemsCount' => $this->whenCounted('completedItems'),
+            'uncompletedTaskItemsCount' => $this->whenCounted('uncompletedItems'),
         ];
     }
 }
