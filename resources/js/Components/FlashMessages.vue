@@ -5,12 +5,13 @@ import {usePage} from "@inertiajs/vue3";
 const show = ref(true)
 
 watch(usePage().props.flash, () => {
-  this.show = true
+  show.value = true
 }, { deep: true })
 </script>
 
+
 <template>
-  <div class="fixed w-full right-4 bottom-4 max-w-xs">
+  <div class="z-50 fixed w-full right-4 bottom-4 max-w-xs">
     <div v-if="$page.props.flash.success && show" class="flex items-center justify-between mb-8 max-w-3xl bg-green-500 rounded">
       <div class="flex items-center">
         <svg class="flex-shrink-0 ml-4 mr-2 w-4 h-4 fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><polygon points="0 11 2 9 7 14 18 3 20 5 7 18" /></svg>
